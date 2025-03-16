@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="main_container">
+    <div id="canva_container">
+        <div id="frame_counter">156</div>
+        <canvas id="main_canvas" width="300" height="500">
+
+        </canvas>
+    </div>
+
+    <div class="control panel">
+        
+
+    </div>
+</div>
+
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+{% endblock %}
