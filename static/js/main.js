@@ -1,11 +1,15 @@
 var canvas
 var ctx
 var img
-var frame_counter
+var frame_counter // html element
 const base_url = "http://127.0.0.1:5000"
 
+var width
+var height
+var max_frame
 var frame_n = 0
 var rotation = 0
+
 
 
 async function load_frame(n) {
@@ -39,8 +43,10 @@ window.addEventListener('DOMContentLoaded', async function() {
     // filename = "video.mp4"
     response = await fetch(base_url + "/loadVideo")//?filename=" + filename)
     if (response.ok) {
-        data = await response.json()
-        const { width, height, max_frame } = data
+        let data = await response.json()
+        width = data['width']; height = data['height']; max_frame = data['max_frame']
+        console.log(width, height, max_frame)
+
         canvas.height = height
         canvas.width = width
     } else {
@@ -56,24 +62,31 @@ window.addEventListener('DOMContentLoaded', async function() {
     // KEY EVENT
     let request_locked = false
     let frame_added = 0
+    let load_frame_bool = false
     this.document.onkeydown = async function(event) {
 
+        load_frame_bool = false
         frame_added = 0
+
         if (!request_locked) {
             request_locked = true
             if (event.key === "ArrowRight") {
                 frame_added = 1
+                load_frame_bool = true
+
             } else if (event.key ==="ArrowLeft") {
                 frame_added = -1
+                load_frame_bool = true
             }
 
             if (event.shiftKey) {
                 frame_added *= 10
             }
 
-            frame_n += frame_added
-            await load_frame(frame_n)
-
+            if (frame_n + frame_added > max_frame || frame_n + frame_added < 0) {
+                frame_added = 0
+                load_frame_bool = false
+            }
 
             if (event.key === "r") {
                 rotation += 1
@@ -86,9 +99,16 @@ window.addEventListener('DOMContentLoaded', async function() {
                 let width = canvas.width
                 canvas.width = canvas.height
                 canvas.height = width
+                load_frame_bool = true
+            }
 
+            
+            if (load_frame_bool) {
+                frame_n += frame_added
                 await load_frame(frame_n)
             }
+
+
 
 
             request_locked = false
