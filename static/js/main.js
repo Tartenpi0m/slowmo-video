@@ -30,6 +30,15 @@ async function load_frame(n) {
 
 }
 
+
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+    };
+}
+
 window.addEventListener('DOMContentLoaded', async function() {
     
     
@@ -57,6 +66,16 @@ window.addEventListener('DOMContentLoaded', async function() {
     //LOAD FIRST FRAME
     img = new Image();
     load_frame(frame_n)//, img, ctx, base_url)
+
+
+
+
+    let coord_element = this.document.getElementById("mouse_position")
+    canvas.addEventListener('mousemove', function(evt) {
+        var mousePos = getMousePos(canvas, evt);
+        coord_element.innerHTML = '(' + parseInt(mousePos.y) + ',' + parseInt(mousePos.x) + ')'
+        // console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
+    }, false);
 
 
     // KEY EVENT
