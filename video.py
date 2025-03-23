@@ -27,7 +27,7 @@ class Video():
         success, frame = self.capture.read()
 
         if success: return self.process_frame(frame)
-        else: raise Exception(f"Frame {self.n} does not exist")
+        else: raise Exception(f"Frame {n} does not exist")
 
     def process_frame(self, frame: np.ndarray):
         # frame = normalize(frame)[:,:,0]

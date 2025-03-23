@@ -9,6 +9,7 @@ var height
 var max_frame
 var frame_n = 0
 var rotation = 0
+var request_locked = false
 
 
 
@@ -19,7 +20,7 @@ async function load_frame(n) {
     //     console.error("Image not returned by the server")
     // }
     blob = await response.blob()
-    console.log("Frame " + n + " loaded")
+    // console.log("Frame " + n + " loaded")
 
     img.src = URL.createObjectURL(blob);
     
@@ -28,6 +29,14 @@ async function load_frame(n) {
         frame_counter.innerHTML = n
     }
 
+}
+
+function synchronizeCursor(n, canvas, progress_bar_cursor) {
+
+    let progress_percent = n / max_frame
+    let cursor_pos = progress_percent * canvas.width
+    progress_bar_cursor.style.left = parseInt(cursor_pos) + 'px';
+    
 }
 
 
@@ -39,17 +48,46 @@ function getMousePos(canvas, evt) {
     };
 }
 
+async function moveCursor(mouseEvent) {
+
+    // move Cursor
+    let pos = getMousePos(canvas, mouseEvent).x;
+    progress_bar_cursor.style.left = pos + 'px';
+
+    // Synchronize frame
+    if(!request_locked) {
+        request_locked = true
+        let n = parseInt((pos / canvas.width) * max_frame)
+        await load_frame(n)
+        frame_n = n
+        request_locked = false
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
 window.addEventListener('DOMContentLoaded', async function() {
-    
     
 
     canvas = this.document.getElementById('main_canvas')
     ctx = canvas.getContext('2d')
     frame_counter = this.document.getElementById('frame_counter')
 
+    let progress_bar_cursor = this.document.getElementById('progress_bar_cursor')
+    let progress_bar = document.getElementById('progress_bar')
+
+
     
-    // INIT VIDEO
-    // filename = "video.mp4"
+    /* Initialize video */    // filename = "video.mp4"
+
     response = await fetch(base_url + "/loadVideo")//?filename=" + filename)
     if (response.ok) {
         let data = await response.json()
@@ -62,24 +100,53 @@ window.addEventListener('DOMContentLoaded', async function() {
         console.error("Video not loaded")
     }
 
-
-    //LOAD FIRST FRAME
+    // Load first frame
     img = new Image();
     load_frame(frame_n)//, img, ctx, base_url)
+    synchronizeCursor(frame_n, canvas, progress_bar_cursor);
 
 
 
 
+
+    /* Progress bar */
+
+    let bar = [progress_bar, progress_bar_cursor]
+    bar.forEach((element) => {element.addEventListener('mousedown', (mouseEvent) => {
+
+        moveCursor(mouseEvent)
+
+        document.addEventListener('mousemove', moveCursor);
+
+        document.addEventListener('mouseup', () => {
+            document.removeEventListener('mousemove', moveCursor);
+        }, { once: true });
+    })})
+
+
+
+
+
+
+
+
+
+
+    /* Mouse cursor position indicator */
     let coord_element = this.document.getElementById("mouse_position")
-    canvas.addEventListener('mousemove', function(evt) {
-        var mousePos = getMousePos(canvas, evt);
+
+    canvas.addEventListener('mousemove', function(mouseEvent) {
+        var mousePos = getMousePos(canvas, mouseEvent);
         coord_element.innerHTML = '(' + parseInt(mousePos.y) + ',' + parseInt(mousePos.x) + ')'
         // console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
     }, false);
 
 
-    // KEY EVENT
-    let request_locked = false
+
+
+
+    /* Keyboard event*/
+
     let frame_added = 0
     let load_frame_bool = false
     this.document.onkeydown = async function(event) {
@@ -124,7 +191,8 @@ window.addEventListener('DOMContentLoaded', async function() {
             
             if (load_frame_bool) {
                 frame_n += frame_added
-                await load_frame(frame_n)
+                await load_frame(frame_n);
+                synchronizeCursor(frame_n, canvas, progress_bar_cursor);
             }
 
 

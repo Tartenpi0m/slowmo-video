@@ -1,5 +1,7 @@
-html {
+html, body {
     height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 body {position: absolute;
@@ -44,10 +46,32 @@ body {position: absolute;
     border:1px solid #000000;
 }   
 
-#control_panel {
-
-
+#progress_bar {
+    position: absolute;
+    height: 20px;
+    width: 100%;
+    background-color: black;
+    left: 0px;
+    bottom: -100px; 
+    border-radius: 5px;
 }
+
+#progress_bar_cursor {
+    position: absolute;
+    height: 30px;
+    width: 20px;
+    background-color: white;
+    border:1px solid #000000;
+
+    left: 60px;
+    bottom: -105px;
+    border-radius: 7px;
+}
+
+/* #control_panel {
+
+
+} */
 
 /* --------------- upload.html --------------- */
 
