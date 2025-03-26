@@ -207,3 +207,8 @@ window.addEventListener('DOMContentLoaded', async function() {
 
 
 })
+
+
+window.addEventListener("beforeunload", async function () {
+    this.navigator.sendBeacon('/exit')
+});

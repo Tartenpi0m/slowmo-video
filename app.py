@@ -6,6 +6,8 @@ from video import Video
 from io import BytesIO
 from PIL import Image
 import sys
+import os
+import signal
 
 
 # Flask constructor takes the name of 
@@ -55,6 +57,12 @@ def get_frame():
         video.rotation = int(rotation)
         print(f"Rotation fixed to {video.rotation*90}°")
         return jsonify({"message": "ok"}), 200
+
+@app.route('/exit', methods=['POST'])
+def shutdown():
+    print("Terminating...")
+    os.kill(os.getpid(), signal.SIGTERM)  # Arrête le serveur Flask
+    return "Shutting down...", 200
 
 # @app.route('/setParam', methods=['POST'])
 
