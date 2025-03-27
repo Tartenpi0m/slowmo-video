@@ -48,6 +48,11 @@ function getMousePos(canvas, evt) {
     };
 }
 
+function getPixelValue(canvas_context, x, y) {
+    pixel_value = canvas_context.getImageData(x, y, width, height).data
+    return pixel_value
+}
+
 async function moveCursor(mouseEvent) {
 
     // move Cursor
@@ -133,12 +138,17 @@ window.addEventListener('DOMContentLoaded', async function() {
 
 
     /* Mouse cursor position indicator */
+
     let coord_element = this.document.getElementById("mouse_position")
+    let pixel_value_element = this.document.getElementById("pixel_value")
 
     canvas.addEventListener('mousemove', function(mouseEvent) {
         var mousePos = getMousePos(canvas, mouseEvent);
         coord_element.innerHTML = '(' + parseInt(mousePos.y) + ',' + parseInt(mousePos.x) + ')'
-        // console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
+
+        var pixel_value = getPixelValue(ctx, mousePos.x, mousePos.y);
+        pixel_value_element.innerHTML = (parseFloat(pixel_value) / 255).toFixed(2)
+
     }, false);
 
 
