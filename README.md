@@ -4,7 +4,7 @@
 
 1. Clone the repo
 2. Install Flask and pillow in your python environment and that's it !
-3. Then type ```python3 app.py``` from the repository folder. Then click on ```http://127.0.0.1:5000``` that should be printed on your terminal.
+3. Then type ```python3 app.py``` from the repository folder. Then click on ```http://127.0.0.1:5000``` ( itshould be printed on your terminal).
 
 Don't forget to close the video webpage before opening another.
 
