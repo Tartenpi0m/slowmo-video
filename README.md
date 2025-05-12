@@ -10,6 +10,6 @@ Don't forget to close the video webpage before opening another.
 
 ## Shortcut
 
-R to rotate the frame
-Right or Left-arrrow to naviguate in the frame
-Maj+Right or Maj+Left arrow to naviguate in the frame with a bigger framestep
+- **R** to rotate the frame  
+- **Right** or **Left** arrrow to naviguate in the frame  
+- **Maj+Right** or **Maj+Left* arrow to naviguate in the frame with a bigger framestep  
