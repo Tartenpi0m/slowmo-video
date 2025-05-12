@@ -8,7 +8,7 @@
 
 Don't forget to close the video webpage before opening another.
 
-## Shortcut
+## Shortcuts
 
 - **R** to rotate the frame  
 - **Right** or **Left** arrrow to naviguate in the frame  
